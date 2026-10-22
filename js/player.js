@@ -2,6 +2,7 @@
 import * as THREE from '../vendor/three.module.min.js';
 import { sfx } from './audio.js';
 import { PERKS } from './items.js';
+import { lookSpeed } from './settings.js';
 
 const EYE = 1.65;
 const GRAVITY = 22;
@@ -25,7 +26,7 @@ export class Player {
   }
 
   look(dx, dy) {
-    const sens = (this.game.aiming ? 0.0013 : 0.0022) * this.game.settings.sens;
+    const sens = (this.game.aiming ? 0.0013 : 0.0022) * lookSpeed();
     this.yaw -= dx * sens;
     this.pitch = Math.max(-1.5, Math.min(1.5, this.pitch - dy * sens));
   }
@@ -33,7 +34,7 @@ export class Player {
   update(dt, keys) {
     const { world, camera } = this.game;
     // Arrow keys look around, for playing without a mouse (e.g. an iPad keyboard).
-    const turn = (this.game.aiming ? 1.3 : 2.4) * this.game.settings.sens * dt;
+    const turn = (this.game.aiming ? 1.3 : 2.4) * lookSpeed() * dt;
     if (keys.ArrowLeft) this.yaw += turn;
     if (keys.ArrowRight) this.yaw -= turn;
     if (keys.ArrowUp) this.pitch = Math.min(1.5, this.pitch + turn * 0.7);
