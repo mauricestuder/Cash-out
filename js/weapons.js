@@ -192,6 +192,8 @@ export class Arsenal {
 
   setTrigger(down) {
     this.triggerHeld = down;
+    // Remember a press briefly, so a tap shorter than one frame still fires.
+    if (down) this.tapT = 0.15;
     if (!down) this.firedThisPress = false;
   }
 
@@ -208,12 +210,14 @@ export class Arsenal {
         w.mag += take; w.reserve -= take;
       }
     }
-    if (this.triggerHeld && w) {
+    this.tapT = Math.max(0, (this.tapT || 0) - dt);
+    if ((this.triggerHeld || this.tapT > 0) && w) {
       const d = this.def();
       if ((d.auto || !this.firedThisPress) && this.cooldown <= 0 && this.reloadT <= 0 && this.switchT <= 0) {
         if (w.mag > 0) this.fire();
         else { if (!this.firedThisPress) sfx.empty(); this.startReload(); }
-        this.firedThisPress = true;
+        this.firedThisPress = this.triggerHeld;
+        this.tapT = 0;
       }
     }
 

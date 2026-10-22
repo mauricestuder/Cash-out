@@ -120,6 +120,7 @@ document.getElementById('setBack').addEventListener('click', () => show(settings
 
 function start() {
   initAudio();
+  document.activeElement?.blur?.();
   if (isTouch) {
     // Fullscreen works on Android and iPad; iPhone just ignores it.
     const el = document.documentElement, fs = el.requestFullscreen || el.webkitRequestFullscreen;
@@ -161,9 +162,24 @@ document.getElementById('again').addEventListener('click', () => location.reload
 const keys = {};
 function firing(down) { game.arsenal.setTrigger(down); }
 
+// Keyboard-only play: X / Enter shoot, C / right Shift aim.
+const FIRE_KEYS = ['KeyX', 'Enter', 'NumpadEnter'];
+const AIM_KEYS = ['KeyC', 'ShiftRight'];
+
 addEventListener('keydown', (e) => {
   keys[e.code] = true;
-  if (game.state.mode !== 'playing') return;
+  const mode = game.state.mode;
+  // Enter starts, resumes and restarts, so menus work without a mouse or touch.
+  if (mode !== 'playing') {
+    const onSettings = !document.getElementById('settings').hidden;
+    if (e.code === 'Enter' && !e.repeat && !onSettings) {
+      e.preventDefault();
+      if (mode === 'over') location.reload(); else start();
+    } else if ((e.code === 'KeyP' || e.code === 'Escape') && mode === 'paused' && !onSettings) start();
+    return;
+  }
+  if (FIRE_KEYS.includes(e.code)) { e.preventDefault(); if (!e.repeat) firing(true); }
+  if (AIM_KEYS.includes(e.code)) game.aiming = true;
   if (e.code === 'KeyR') game.arsenal.startReload();
   if (e.code === 'Digit1') game.arsenal.switchTo(0);
   if (e.code === 'Digit2') game.arsenal.switchTo(1);
@@ -171,10 +187,14 @@ addEventListener('keydown', (e) => {
   if (e.code === 'KeyQ') game.arsenal.cycle();
   if (e.code === 'KeyG') game.items.throwGrenade();
   if (e.code === 'KeyE' || e.code === 'KeyF') { const n = game.items.nearest(); if (n) n.it.use(); }
-  if (e.code === 'KeyP') pause();
+  if (e.code === 'KeyP' || e.code === 'Escape') pause();
   if (e.code === 'Space' || e.code.startsWith('Arrow')) e.preventDefault();
 });
-addEventListener('keyup', (e) => { keys[e.code] = false; });
+addEventListener('keyup', (e) => {
+  keys[e.code] = false;
+  if (FIRE_KEYS.includes(e.code)) firing(false);
+  if (AIM_KEYS.includes(e.code)) game.aiming = false;
+});
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; firing(false); });
 
 canvas.addEventListener('mousedown', (e) => {

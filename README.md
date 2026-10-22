@@ -35,13 +35,13 @@ tablets (play in landscape).
 |---|---|---|
 | Move | WASD, Shift to sprint | Drag on the left side, push all the way up to sprint |
 | Look | Mouse or arrow keys | Drag on the right side (or arrow keys on a keyboard) |
-| Shoot / aim | Left / right mouse button | FIRE / AIM |
+| Shoot / aim | Left / right mouse button, or X (or Enter) / C (or right Shift) | FIRE / AIM |
 | Jump | Space | JUMP |
 | Reload | R | RLD |
 | Switch gun | 1, 2, 3, Q or mouse wheel | SWAP |
 | Grenade | G | BAG |
 | Buy / use | E | USE (shows up next to things you can buy) |
-| Pause | Esc or P | II |
+| Pause | Esc or P (Enter starts and resumes) | II |
 
 ## Run it
 
