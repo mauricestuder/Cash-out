@@ -165,6 +165,9 @@ function firing(down) { game.arsenal.setTrigger(down); }
 // Keyboard-only play: X / Enter shoot, C / right Shift aim.
 const FIRE_KEYS = ['KeyX', 'Enter', 'NumpadEnter'];
 const AIM_KEYS = ['KeyC', 'ShiftRight'];
+// Some iPad keyboards leave e.code empty, so fall back to the key's name.
+const isFire = (e) => FIRE_KEYS.includes(e.code) || e.key === 'Enter' || e.key === 'x' || e.key === 'X';
+const isAim = (e) => AIM_KEYS.includes(e.code) || e.key === 'c' || e.key === 'C';
 
 addEventListener('keydown', (e) => {
   keys[e.code] = true;
@@ -172,14 +175,14 @@ addEventListener('keydown', (e) => {
   // Enter starts, resumes and restarts, so menus work without a mouse or touch.
   if (mode !== 'playing') {
     const onSettings = !document.getElementById('settings').hidden;
-    if (e.code === 'Enter' && !e.repeat && !onSettings) {
+    if (e.key === 'Enter' && !e.repeat && !onSettings) {
       e.preventDefault();
       if (mode === 'over') location.reload(); else start();
     } else if ((e.code === 'KeyP' || e.code === 'Escape') && mode === 'paused' && !onSettings) start();
     return;
   }
-  if (FIRE_KEYS.includes(e.code)) { e.preventDefault(); if (!e.repeat) firing(true); }
-  if (AIM_KEYS.includes(e.code)) game.aiming = true;
+  if (isFire(e)) { e.preventDefault(); if (!e.repeat) firing(true); }
+  if (isAim(e)) game.aiming = true;
   if (e.code === 'KeyR') game.arsenal.startReload();
   if (e.code === 'Digit1') game.arsenal.switchTo(0);
   if (e.code === 'Digit2') game.arsenal.switchTo(1);
@@ -192,8 +195,8 @@ addEventListener('keydown', (e) => {
 });
 addEventListener('keyup', (e) => {
   keys[e.code] = false;
-  if (FIRE_KEYS.includes(e.code)) firing(false);
-  if (AIM_KEYS.includes(e.code)) game.aiming = false;
+  if (isFire(e)) firing(false);
+  if (isAim(e)) game.aiming = false;
 });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; firing(false); });
 
