@@ -75,12 +75,16 @@ export class Enemies {
   startRound(r) {
     const state = this.game.state;
     state.round = r;
-    this.toSpawn = roundCount(r);
-    this.sharksLeft = r % 5 === 0 ? 1 + Math.floor(r / 10) : 0;
+    // Every 7th round is an Audit Round: a swarm of fast Tax Auditors in red fog.
+    this.audit = r % 7 === 0;
+    this.toSpawn = this.audit ? Math.round(roundCount(r) * 0.8) : roundCount(r);
+    this.sharksLeft = r % 5 === 0 && !this.audit ? 1 + Math.floor(r / 10) : 0;
     this.spawnT = 1;
     this.dropsThisRound = 0;
     this.game.hud.setRound(r);
-    if (r > 1) this.game.hud.announce('ROUND ' + r, r % 5 === 0 ? 'The Bank President wants a word…' : '', 3);
+    this.setAuditMood(this.audit);
+    if (this.audit) this.game.hud.announce('AUDIT ROUND', 'They\'re here to check your books…', 3.5);
+    else if (r > 1) this.game.hud.announce('ROUND ' + r, r % 5 === 0 ? 'The Bank President wants a word…' : '', 3);
     else this.game.hud.announce('ROUND 1', 'Cash is king. Survive.', 3.5);
     sfx.roundStart();
     if (r > 1) state.grenades = Math.min(4, state.grenades + 2);
@@ -104,7 +108,23 @@ export class Enemies {
       this.breakT = 8;
       sfx.roundEnd();
       this.game.hud.announce('ROUND ' + this.game.state.round + ' SURVIVED', 'Spend your cash!', 3);
+      if (this.audit) {
+        // Passing an audit pays out a Max Ammo right next to you.
+        this.audit = false;
+        this.setAuditMood(false);
+        const p = this.game.player.pos;
+        this.game.items.dropPowerup({ x: p.x + 1.5 * Math.sin(this.game.player.yaw + Math.PI), z: p.z + 1.5 * Math.cos(this.game.player.yaw + Math.PI) }, 'maxammo');
+      }
     }
+  }
+
+  // Red fog during Audit Rounds.
+  setAuditMood(on) {
+    const { scene } = this.game;
+    const c = on ? 0x1a0303 : 0x020203;
+    scene.fog.color.setHex(c);
+    scene.background.setHex(c);
+    scene.fog.far = on ? 15 : 20;
   }
 
   // ---------- spawning ----------
@@ -112,7 +132,8 @@ export class Enemies {
     const { world, player, state } = this.game;
     const r = state.round;
     let type = 'debt';
-    if (this.sharksLeft > 0 && (this.toSpawn <= this.sharksLeft || Math.random() < 0.25)) { type = 'shark'; this.sharksLeft--; }
+    if (this.audit) type = 'tax';
+    else if (this.sharksLeft > 0 && (this.toSpawn <= this.sharksLeft || Math.random() < 0.25)) { type = 'shark'; this.sharksLeft--; }
     else if (r >= 6 && Math.random() < Math.min(0.25, 0.08 + (r - 6) * 0.02)) type = 'collector';
     else if (r >= 4 && Math.random() < Math.min(0.35, 0.1 + r * 0.02)) type = 'tax';
 
@@ -127,7 +148,8 @@ export class Enemies {
     const runnerChance = Math.max(0, Math.min(0.85, (r - 2) * 0.15));
     let speed = t.speed || (Math.random() < runnerChance ? 3.1 + Math.random() * 0.8 : 1.4 + Math.random() * 0.4);
     if (type === 'tax') speed += Math.min(1, r * 0.05);
-    const hp = roundHp(r) * t.hpMul;
+    let hp = roundHp(r) * t.hpMul;
+    if (this.audit) { speed += 0.8; hp *= 0.7; }
 
     const e = this.build(type);
     e.group.position.set(pick.x + (Math.random() - 0.5) * 0.6, -2.2 * t.scale, pick.z + (Math.random() - 0.5) * 0.6);

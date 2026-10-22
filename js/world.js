@@ -10,6 +10,7 @@ export const AREAS = {
   lobby:   { name: 'Lobby',         rect: [-15, 15, -10, 10] },
   trading: { name: 'Trading Floor', rect: [-15, 15, -40, -10] },
   vault:   { name: 'Vault',         rect: [15, 30, -36, -18] },
+  boardroom: { name: 'Boardroom',   rect: [15, 29, -9, 3] },
 };
 
 export function buildWorld(scene) {
@@ -69,7 +70,8 @@ export function buildWorld(scene) {
   // Lobby
   wallX(10, -15, 15);
   wallZ(-15, -10, 10);
-  wallZ(15, -10, 10);
+  wallZ(15, -10, -6);
+  wallZ(15, -2, 10);
   wallX(-10, -15, -2);
   wallX(-10, 2, 15);
   // Trading floor
@@ -81,6 +83,10 @@ export function buildWorld(scene) {
   wallX(-36, 15, 30, 'steel');
   wallX(-18, 15, 30, 'steel');
   wallZ(30, -36, -18, 'steel');
+  // Boardroom
+  wallX(3, 15, 29);
+  wallX(-9, 15, 29);
+  wallZ(29, -9, 3);
 
   // ---------- doors ----------
   function addDoor({ name, cost, x1, x2, z1, z2, a, b, x, z, nx, nz, material }) {
@@ -114,6 +120,12 @@ export function buildWorld(scene) {
     name: 'Vault', cost: 1250, x1: 14.6, x2: 15.4, z1: -30, z2: -24,
     a: 'trading', b: 'vault', x: 15, z: -27, nx: 1, nz: 0,
     material: new THREE.MeshLambertMaterial({ map: vd }),
+  });
+
+  addDoor({
+    name: 'Boardroom', cost: 1500, x1: 14.6, x2: 15.4, z1: -6, z2: -2,
+    a: 'lobby', b: 'boardroom', x: 15, z: -4, nx: 1, nz: 0,
+    material: new THREE.MeshLambertMaterial({ map: T.boardroomDoor() }),
   });
 
   // ---------- decor ----------
@@ -199,9 +211,30 @@ export function buildWorld(scene) {
     }
   }
 
+  // Boardroom: long table with chairs, the President's portrait and a sinking chart.
+  box(19, 25, -4.2, -1.8, 0, 0.78, wood);
+  box(18.9, 25.1, -4.3, -1.7, 0.78, 0.84, new THREE.MeshLambertMaterial({ color: 0x3a1f0c }), false);
+  const leather = new THREE.MeshLambertMaterial({ color: 0x2a1410 });
+  for (const x of [19.8, 21.4, 23, 24.6]) {
+    for (const [z, back] of [[-5, -5.3], [-1, -0.7]]) {
+      box(x - 0.3, x + 0.3, z - 0.3, z + 0.3, 0, 0.5, leather, false);
+      box(x - 0.3, x + 0.3, back - 0.06, back + 0.06, 0.5, 1.3, leather, false);
+    }
+  }
+  box(25.6, 26.2, -3.3, -2.7, 0, 0.5, leather, false); // the President's seat at the head
+  box(26.1, 26.25, -3.4, -2.6, 0.5, 1.6, leather, false);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.0, 1.6), gold);
+  frame.position.set(28.66, 2.6, -3); scene.add(frame);
+  const portrait = new THREE.Mesh(new THREE.PlaneGeometry(1.35, 1.75), new THREE.MeshLambertMaterial({ map: T.npcFace('shark'), emissive: 0x222222 }));
+  portrait.position.set(28.61, 2.6, -3); portrait.rotation.y = -Math.PI / 2; scene.add(portrait);
+  sign('OUR FOUNDER', 28.62, 1.35, -3, -Math.PI / 2, 1.6, 0.3, { h: 64 });
+  const chart = new THREE.Mesh(new THREE.PlaneGeometry(3, 1.8), new THREE.MeshBasicMaterial({ map: T.chartTex() }));
+  chart.position.set(19.5, 2.4, -8.68); scene.add(chart);
+  sign('BOARDROOM', 14.66, 4.2, -4, -Math.PI / 2, 3, 0.6);
+
   // Ceiling lamps
   const lampMat = new THREE.MeshBasicMaterial({ color: 0xfff1c9 });
-  for (const [x, z] of [[0, 0], [-8, -25], [8, -25], [0, -33], [0, -17], [22.5, -27]]) {
+  for (const [x, z] of [[0, 0], [-8, -25], [8, -25], [0, -33], [0, -17], [22.5, -27], [22, -3]]) {
     const l = new THREE.Mesh(new THREE.BoxGeometry(2, 0.08, 0.5), lampMat);
     l.position.set(x, WALL_H - 0.05, z);
     scene.add(l);
@@ -214,6 +247,7 @@ export function buildWorld(scene) {
     { x: -13, z: -38.5, area: 'trading' }, { x: 13, z: -38.5, area: 'trading' },
     { x: -13, z: -12, area: 'trading' }, { x: 12.5, z: -12, area: 'trading' },
     { x: 28, z: -34.5, area: 'vault' }, { x: 28, z: -19.5, area: 'vault' },
+    { x: 27.6, z: 1.6, area: 'boardroom' }, { x: 27.6, z: -6.6, area: 'boardroom' },
   ];
   const ventMat = new THREE.MeshBasicMaterial({ color: 0x1a0606 });
   const ventGlow = new THREE.MeshBasicMaterial({ color: 0xff2a1a, transparent: true, opacity: 0.35 });
@@ -233,7 +267,7 @@ export function buildWorld(scene) {
   scene.add(new THREE.AmbientLight(0xffffff, 0.05));
   for (const [x, z, c, i] of [
     [0, 0, 0xffd9a0, 40], [-8, -25, 0x9effc4, 30], [8, -25, 0x9effc4, 30],
-    [0, -36, 0x9effc4, 20], [22.5, -27, 0xffd56a, 35],
+    [0, -36, 0x9effc4, 20], [22.5, -27, 0xffd56a, 35], [22, -3, 0xffd9a0, 30],
   ]) {
     const p = new THREE.PointLight(c, i * 0.8, 30, 1.2);
     p.position.set(x, WALL_H - 0.6, z);
@@ -251,11 +285,12 @@ export function buildWorld(scene) {
 
   // ---------- queries ----------
   function areaAt(x, z) {
-    for (const key of ['vault', 'trading', 'lobby']) {
+    for (const key of ['vault', 'boardroom', 'trading', 'lobby']) {
       const [x1, x2, z1, z2] = AREAS[key].rect;
       if (x >= x1 && x <= x2 && z >= z1 && z <= z2) return key;
     }
-    return x > 15 ? 'vault' : z < -10 ? 'trading' : 'lobby';
+    if (x > 15) return z > -14 ? 'boardroom' : 'vault';
+    return z < -10 ? 'trading' : 'lobby';
   }
 
   function isUnlocked(area) {

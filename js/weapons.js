@@ -7,12 +7,13 @@ export const WEAPONS = {
   penny:   { name: 'Penny Pistol',     kind: 'pistol',   proj: 'coin',    auto: false, dmg: 35,  rate: 0.16,  mag: 8,   reserve: 80,  reload: 1.3, spread: 0.008, color: 0xb87333 },
   bill:    { name: 'Bill Blaster',     kind: 'smg',      proj: 'bill',    auto: true,  dmg: 30,  rate: 0.08,  mag: 32,  reserve: 192, reload: 1.9, spread: 0.028, color: 0x2e7d32, cost: 1000 },
   goldbar: { name: 'Gold Bar Shotgun', kind: 'shotgun',  proj: 'bar',     auto: false, dmg: 34,  rate: 0.75,  mag: 6,   reserve: 48,  reload: 2.4, spread: 0.085, color: 0xd4af37, cost: 1500, pellets: 8 },
+  assault: { name: 'Market Maker AR',  kind: 'assault',  proj: 'coin',    auto: true,  dmg: 52,  rate: 0.105, mag: 30,  reserve: 240, reload: 2.2, spread: 0.016, color: 0x37474f, cost: 2500 },
   minigun: { name: 'Coin Minigun',     kind: 'minigun',  proj: 'coin',    auto: true,  dmg: 36,  rate: 0.045, mag: 120, reserve: 360, reload: 4.0, spread: 0.05,  color: 0x8f8f8f, moveMul: 0.75 },
   diamond: { name: 'Diamond Rifle',    kind: 'rifle',    proj: 'diamond', auto: false, dmg: 380, rate: 0.85,  mag: 5,   reserve: 40,  reload: 2.6, spread: 0.0,   color: 0x80deea, pierce: 5 },
   piggy:   { name: 'Piggy Launcher',   kind: 'launcher', proj: 'piggy',   auto: false, dmg: 650, rate: 0.9,   mag: 3,   reserve: 18,  reload: 2.8, spread: 0.0,   color: 0xf48fb1, explosive: true, radius: 5.5 },
 };
 // What the Slot Machine can roll.
-export const BOX_POOL = ['bill', 'goldbar', 'minigun', 'diamond', 'piggy'];
+export const BOX_POOL = ['bill', 'goldbar', 'assault', 'minigun', 'diamond', 'piggy'];
 
 const GOLD = 0xffcc33;
 
@@ -50,6 +51,16 @@ export function gunModel(id, gold = false) {
       add(B(0.12, 0.06, 0.2), dark, 0, -0.07, -0.3);
       add(B(0.08, 0.15, 0.2), dark, 0, -0.08, 0.06, 0.3);
       muzzleZ = -0.5;
+      break;
+    case 'assault':
+      add(B(0.08, 0.11, 0.56), body, 0, 0, -0.22);
+      add(B(0.07, 0.1, 0.2), dark, 0, -0.02, 0.12); // stock
+      add(B(0.06, 0.16, 0.07), dark, 0, -0.12, -0.04, 0.25); // grip
+      add(B(0.05, 0.2, 0.12), new THREE.MeshLambertMaterial({ map: T.bill() }), 0, -0.14, -0.2, -0.15); // banknote magazine
+      add(C(0.03, 0.2), dark, 0, 0.1, -0.2, Math.PI / 2); // scope
+      add(C(0.025, 0.01), new THREE.MeshBasicMaterial({ color: 0x3fff7a }), 0, 0.1, -0.305, Math.PI / 2); // green lens
+      add(C(0.022, 0.14), dark, 0, 0.01, -0.56, Math.PI / 2);
+      muzzleZ = -0.63;
       break;
     case 'minigun':
       for (let i = 0; i < 6; i++) {

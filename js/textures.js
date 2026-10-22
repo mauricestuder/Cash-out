@@ -124,6 +124,44 @@ export function woodBoards() {
   });
 }
 
+// Double mahogany doors with brass handles and a "PRIVATE" plaque.
+export function boardroomDoor() {
+  return tex(256, 256, (g, w, h) => {
+    g.fillStyle = '#3a1a0c'; g.fillRect(0, 0, w, h);
+    for (const x0 of [8, w / 2 + 4]) {
+      const pw = w / 2 - 12;
+      g.fillStyle = '#5a2a14'; g.fillRect(x0, 8, pw, h - 16);
+      g.strokeStyle = '#2a1006'; g.lineWidth = 4;
+      g.strokeRect(x0 + 12, 20, pw - 24, h * 0.38); g.strokeRect(x0 + 12, h * 0.5, pw - 24, h * 0.42);
+      g.fillStyle = 'rgba(255,220,180,.06)';
+      for (let y = 10; y < h - 10; y += 7) g.fillRect(x0, y, pw, 2); // grain
+    }
+    g.fillStyle = '#d4a017'; g.fillRect(w / 2 - 16, h * 0.52, 8, 34); g.fillRect(w / 2 + 8, h * 0.52, 8, 34);
+    g.fillStyle = '#c9a43a'; g.fillRect(w / 2 - 50, 28, 100, 26);
+    g.fillStyle = '#2a1006'; g.font = 'bold 20px Impact, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('PRIVATE', w / 2, 42);
+  });
+}
+
+// "Q3 PROFITS" line chart that only goes down.
+export function chartTex() {
+  return tex(384, 230, (g, w, h) => {
+    g.fillStyle = '#f2ecdc'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#b8902f'; g.lineWidth = 8; g.strokeRect(4, 4, w - 8, h - 8);
+    g.fillStyle = '#1a1a1a'; g.font = 'bold 26px Impact, sans-serif'; g.textAlign = 'center';
+    g.fillText('Q3 PROFITS', w / 2, 38);
+    g.strokeStyle = '#bbb'; g.lineWidth = 1;
+    for (let y = 60; y < h - 20; y += 30) { g.beginPath(); g.moveTo(30, y); g.lineTo(w - 24, y); g.stroke(); }
+    g.strokeStyle = '#c62828'; g.lineWidth = 6; g.lineJoin = 'round';
+    g.beginPath();
+    const pts = [[34, 64], [80, 80], [120, 72], [170, 110], [210, 104], [260, 150], [300, 142], [350, 205]];
+    pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
+    g.stroke();
+    g.fillStyle = '#c62828'; g.beginPath(); g.moveTo(350, 214); g.lineTo(336, 192); g.lineTo(362, 196); g.fill();
+    g.fillStyle = 'rgba(120,10,10,.6)'; g.fillRect(250, 170, 20, 10); g.fillRect(258, 180, 6, 22); // blood smear
+  });
+}
+
 export function vaultDoor() {
   return tex(512, 512, (g, w, h) => {
     g.fillStyle = '#4d5359'; g.fillRect(0, 0, w, h);

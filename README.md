@@ -7,17 +7,19 @@ tablets (play in landscape).
 
 - Fight off rounds of the bank's undead staff: **Salesmen**, **Tax Auditors**
   (fast, from round 4), **Debt Collectors** (throw invoices from range, from
-  round 6) and the **Bank President** (tanky boss, every 5th round). Hits and
-  kills earn cash, and quick kills in a row build a cash combo.
+  round 6) and the **Bank President** (tanky boss, every 5th round). Every
+  7th round is an **Audit Round**: a swarm of fast Tax Auditors in red fog,
+  with a Max Ammo for surviving it. Hits and kills earn cash, and quick kills
+  in a row build a cash combo.
 - Guns shoot money: Penny Pistol (coins), Bill Blaster (banknotes), Gold Bar
-  Shotgun, plus the Coin Minigun, Diamond Rifle and Piggy Launcher from the
-  **Slot Machine** ($950).
-- Spend cash on gun vending machines, the doors to the Trading Floor and
-  Vault, perk machines, the **Paper Shredder** trap in the Trading Floor
+  Shotgun, Market Maker AR, plus the Coin Minigun, Diamond Rifle and Piggy
+  Launcher from the **Slot Machine** ($950).
+- Spend cash on gun vending machines, the doors to the Trading Floor, Vault
+  and Boardroom, perk machines, the **Paper Shredder** trap in the Trading Floor
   doorway and the **Gold Plater** in the Vault, which upgrades a gun to 24K.
 - Perks: Health Insurance (more health), Fast Cash (faster reload), Compound
-  Interest (+50% cash), Day Trader (faster fire rate) and Diversified
-  Portfolio (carry a third gun).
+  Interest (+50% cash), Day Trader (faster fire rate), Diversified Portfolio
+  (carry a third gun) and Golden Parachute (get back up once).
 - Throw Money Bag grenades. Killed enemies sometimes drop Max Ammo, Double
   Cash, Insta-Kill, Market Crash, Bailout (+$1000) or Fire Sale ($10 Slot
   Machine spins).

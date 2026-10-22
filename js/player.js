@@ -1,6 +1,7 @@
 // First-person movement, collision, health and regen.
 import * as THREE from '../vendor/three.module.min.js';
 import { sfx } from './audio.js';
+import { PERKS } from './items.js';
 
 const EYE = 1.65;
 const GRAVITY = 22;
@@ -87,6 +88,24 @@ export class Player {
     this.shake = Math.min(1, this.shake + 0.5);
     sfx.hurt();
     this.game.hud.flashDamage();
-    if (this.hp <= 0) { this.hp = 0; this.game.gameOver(); }
+    if (this.hp <= 0 && this.game.state.perks.has('parachute')) this.bailOut();
+    else if (this.hp <= 0) { this.hp = 0; this.game.gameOver(); }
+  }
+
+  // Golden Parachute: get back up once, blasting the undead around you away.
+  bailOut() {
+    const { state, hud, items, enemies } = this.game;
+    state.perks.delete('parachute');
+    hud.setPerks([...state.perks].map(k => PERKS[k]));
+    this.hp = this.maxHp;
+    this.sinceHurt = 99;
+    for (const e of enemies.list) {
+      if (e.state === 'dying') continue;
+      if (Math.hypot(e.pos.x - this.pos.x, e.pos.z - this.pos.z) < 5) enemies.damage(e, 5000, false, null, true);
+    }
+    items.burst(this.pos.clone().setY(1.5), 40, 'money', 2);
+    this.shake = 1;
+    sfx.powerup();
+    hud.announce('GOLDEN PARACHUTE', 'Second chance. Make it count.', 2.5);
   }
 }

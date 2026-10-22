@@ -21,6 +21,7 @@ export const PERKS = {
   interest:  { name: 'Compound Interest', cost: 2000, desc: '+50% cash from every hit', color: 0x1565c0 },
   daytrader: { name: 'Day Trader',       cost: 2000, desc: 'Shoot 25% faster', color: 0xef6c00 },
   portfolio: { name: 'Diversified Portfolio', cost: 4000, desc: 'Carry a third gun', color: 0x6a1b9a },
+  parachute: { name: 'Golden Parachute', cost: 3000, desc: 'Survive one knockout', color: 0xffb300 },
 };
 
 export class Items {
@@ -396,6 +397,7 @@ export class Items {
     vending('bill', 1000, 14.68, 2, -Math.PI / 2, 'Bill Blaster', '#3fd16a');
     vending('grenade', 250, -5, -9.68, 0, 'Money Bags', '#ffd34d');
     vending('goldbar', 1500, -14.68, -22, Math.PI / 2, 'Gold Bar Shotgun', '#ffd34d');
+    vending('assault', 2500, 21, 2.68, Math.PI, 'Market Maker AR', '#4fc3f7');
 
     // Investments (perks)
     const perk = (id, x, z, ry) => {
@@ -417,6 +419,7 @@ export class Items {
     perk('interest', -14.3, -32, Math.PI / 2);
     perk('daytrader', -14.3, -27, Math.PI / 2);
     perk('portfolio', 25.5, -18.75, Math.PI);
+    perk('parachute', 26, -8.25, 0);
 
     // Slot Machine (the mystery box)
     {
