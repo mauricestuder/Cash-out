@@ -32,7 +32,7 @@ tablets (play in landscape).
 | | Keyboard and mouse | Touch |
 |---|---|---|
 | Move | WASD, Shift to sprint | Drag on the left side, push all the way up to sprint |
-| Look | Mouse | Drag on the right side |
+| Look | Mouse or arrow keys | Drag on the right side (or arrow keys on a keyboard) |
 | Shoot / aim | Left / right mouse button | FIRE / AIM |
 | Jump | Space | JUMP |
 | Reload | R | RLD |

@@ -31,11 +31,18 @@ export class Player {
 
   update(dt, keys) {
     const { world, camera } = this.game;
+    // Arrow keys look around, for playing without a mouse (e.g. an iPad keyboard).
+    const turn = (this.game.aiming ? 1.3 : 2.4) * this.game.settings.sens * dt;
+    if (keys.ArrowLeft) this.yaw += turn;
+    if (keys.ArrowRight) this.yaw -= turn;
+    if (keys.ArrowUp) this.pitch = Math.min(1.5, this.pitch + turn * 0.7);
+    if (keys.ArrowDown) this.pitch = Math.max(-1.5, this.pitch - turn * 0.7);
+
     let fx = 0, fz = 0;
-    if (keys.KeyW || keys.ArrowUp) fz -= 1;
-    if (keys.KeyS || keys.ArrowDown) fz += 1;
-    if (keys.KeyA || keys.ArrowLeft) fx -= 1;
-    if (keys.KeyD || keys.ArrowRight) fx += 1;
+    if (keys.KeyW) fz -= 1;
+    if (keys.KeyS) fz += 1;
+    if (keys.KeyA) fx -= 1;
+    if (keys.KeyD) fx += 1;
     const tm = this.game.touchMove;
     if (tm) { fx += tm.x; fz += tm.y; }
     const len = Math.hypot(fx, fz);

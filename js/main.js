@@ -172,7 +172,7 @@ addEventListener('keydown', (e) => {
   if (e.code === 'KeyG') game.items.throwGrenade();
   if (e.code === 'KeyE' || e.code === 'KeyF') { const n = game.items.nearest(); if (n) n.it.use(); }
   if (e.code === 'KeyP') pause();
-  if (e.code === 'Space') e.preventDefault();
+  if (e.code === 'Space' || e.code.startsWith('Arrow')) e.preventDefault();
 });
 addEventListener('keyup', (e) => { keys[e.code] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; firing(false); });
