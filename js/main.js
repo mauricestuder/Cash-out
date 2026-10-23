@@ -136,18 +136,23 @@ function start() {
 }
 
 let hadLock = false;
+let skipMoves = 0;
+let lockRefused = false;
+// Raw mouse input skips the OS acceleration and Chrome's sudden jumps; older browsers fall back to normal locking.
 function lock() {
   try {
-    const p = canvas.requestPointerLock?.();
-    if (p && p.catch) p.catch(() => {});
+    const p = canvas.requestPointerLock?.({ unadjustedMovement: true });
+    if (p && p.catch) p.catch(() => { try { canvas.requestPointerLock()?.catch?.(() => {}); } catch { /* still not allowed */ } });
   } catch { /* headless or unsupported: play without mouse lock */ }
 }
 document.addEventListener('pointerlockchange', () => {
-  if (document.pointerLockElement === canvas) { hadLock = true; return; }
+  if (document.pointerLockElement === canvas) { hadLock = true; lockRefused = false; skipMoves = 2; return; }
   if (hadLock && game.state.mode === 'playing') pause();
 });
+document.addEventListener('pointerlockerror', () => { lockRefused = true; });
 function pause() {
   game.state.mode = 'paused';
+  if (document.pointerLockElement) document.exitPointerLock();
   firing(false);
   touch?.reset();
   game.hud.clear();
@@ -202,7 +207,8 @@ addEventListener('blur', () => { for (const k in keys) keys[k] = false; firing(f
 
 canvas.addEventListener('mousedown', (e) => {
   if (game.state.mode !== 'playing') return;
-  if (!document.pointerLockElement) lock();
+  // The click that grabs the mouse shouldn't also fire.
+  if (!isTouch && document.pointerLockElement !== canvas) { lock(); if (!lockRefused) return; }
   if (e.button === 0) firing(true);
   if (e.button === 2) game.aiming = true;
 });
@@ -211,9 +217,20 @@ addEventListener('mouseup', (e) => {
   if (e.button === 2) game.aiming = false;
 });
 addEventListener('mousemove', (e) => {
-  if (game.state.mode === 'playing' && document.pointerLockElement === canvas) game.player.look(e.movementX, e.movementY);
+  if (game.state.mode !== 'playing' || document.pointerLockElement !== canvas) return;
+  // The first events after locking can carry the whole cursor jump, and some browsers send odd spikes.
+  if (skipMoves > 0) { skipMoves--; return; }
+  const dx = e.movementX, dy = e.movementY;
+  if (Math.abs(dx) > 600 || Math.abs(dy) > 600) return;
+  game.player.look(dx, dy);
 });
-addEventListener('wheel', () => { if (game.state.mode === 'playing') game.arsenal.cycle(); });
+let wheelT = 0;
+addEventListener('wheel', () => {
+  // One flick of a wheel or trackpad sends many events; switch once per flick.
+  const now = performance.now();
+  if (game.state.mode === 'playing' && now - wheelT > 250) game.arsenal.cycle();
+  wheelT = now;
+});
 addEventListener('contextmenu', (e) => e.preventDefault());
 const touch = isTouch ? initTouch(game, { keys, firing, pause }) : null;
 

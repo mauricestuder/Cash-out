@@ -26,7 +26,7 @@ tablets (play in landscape).
 - Three golden piggy banks are hidden around the bank. Shoot them all for a
   jackpot.
 - **Settings** (from the menu or pause screen): picture quality, retro
-  effects, field of view, look speed and volume. They and your best run are
+  effects, field of view, sensitivity and volume. They and your best run are
   saved in the browser.
 
 ## Controls

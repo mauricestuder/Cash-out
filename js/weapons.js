@@ -239,7 +239,7 @@ export class Arsenal {
     this.kick = Math.min(1, this.kick + (d.kind === 'shotgun' || d.kind === 'rifle' || d.kind === 'launcher' ? 1 : 0.35));
     this.flashT = 0.045;
     this.flash.rotation.z = Math.random() * Math.PI;
-    sfx.shoot(d.proj, w.gold);
+    sfx.shoot(d.kind, w.gold);
     game.player.pitch = Math.min(1.5, game.player.pitch + (d.kind === 'shotgun' ? 0.03 : d.kind === 'rifle' ? 0.04 : 0.006));
 
     const cam = game.camera;
