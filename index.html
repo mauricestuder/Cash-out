@@ -163,6 +163,10 @@
       opacity: 0; transition: opacity .3s; white-space: nowrap; }
     #combo span { color: var(--green); font-size: 26px; }
     #combo.pop { animation: comboPop .25s steps(3); }
+    #headshot { position: absolute; left: 50%; top: calc(50% + 34px); transform: translateX(-50%); font-size: 22px; color: #ff4a3a;
+      text-shadow: 2px 2px 0 #000; opacity: 0; transition: opacity .25s; white-space: nowrap; pointer-events: none; }
+    #headshot.max { color: var(--gold); }
+    #headshot.pop { animation: comboPop .2s steps(2); }
     @keyframes comboPop { from { transform: translateX(-50%) scale(1.5); } to { transform: translateX(-50%) scale(1); } }
   </style>
 </head>
@@ -182,6 +186,7 @@
     <div id="announce"></div>
     <div id="toast"></div>
     <div id="combo"></div>
+    <div id="headshot"></div>
   </div>
 
   <div id="touchUI">

@@ -8,9 +8,10 @@ export class Hud {
       cash: $('cash'), pops: $('cashPops'), round: $('round'), weapon: $('weapon'), ammo: $('ammo'),
       grenades: $('grenades'), vignette: $('vignette'), hurt: $('hurt'), prompt: $('prompt'),
       announce: $('announce'), toast: $('toast'), hit: $('hitmarker'), powerups: $('powerups'),
-      perks: $('perks'), left: $('left'), combo: $('combo'),
+      perks: $('perks'), left: $('left'), combo: $('combo'), head: $('headshot'),
     };
     this.comboT = 0;
+    this.headT = 0;
     this.announceT = 0;
     this.toastT = 0;
     this.hitT = 0;
@@ -67,8 +68,8 @@ export class Hud {
   // Hide banners and hints, e.g. when a pause or game-over screen opens.
   clear() {
     this.prompt('');
-    for (const k of ['announce', 'toast', 'combo']) this.el[k].style.opacity = 0;
-    this.announceT = this.toastT = this.comboT = 0;
+    for (const k of ['announce', 'toast', 'combo', 'head']) this.el[k].style.opacity = 0;
+    this.announceT = this.toastT = this.comboT = this.headT = 0;
   }
 
   toast(text) { this.el.toast.textContent = text; this.el.toast.style.opacity = 1; this.toastT = 1.6; }
@@ -85,6 +86,15 @@ export class Hud {
     if (state.instaT > 0) parts.push(`INSTA-KILL ${Math.ceil(state.instaT)}`);
     if (state.saleT > 0) parts.push(`FIRE SALE ${Math.ceil(state.saleT)}`);
     this.set('pu', this.el.powerups, parts.join('   '));
+  }
+
+  headshot(mul) {
+    const h = this.el.head;
+    h.textContent = `HEADSHOT x${mul}`;
+    h.classList.toggle('max', mul >= 4);
+    h.style.opacity = 1;
+    h.classList.remove('pop'); void h.offsetWidth; h.classList.add('pop');
+    this.headT = 0.8;
   }
 
   combo(n, bonus) {
@@ -112,6 +122,7 @@ export class Hud {
     if (this.announceT > 0) { this.announceT -= dt; if (this.announceT <= 0) this.el.announce.style.opacity = 0; }
     if (this.toastT > 0) { this.toastT -= dt; if (this.toastT <= 0) this.el.toast.style.opacity = 0; }
     if (this.comboT > 0) { this.comboT -= dt; if (this.comboT <= 0) this.el.combo.style.opacity = 0; }
+    if (this.headT > 0) { this.headT -= dt; if (this.headT <= 0) this.el.head.style.opacity = 0; }
     if (this.hitT > 0) { this.hitT -= dt; if (this.hitT <= 0) this.el.hit.style.opacity = 0; }
     if (this.hurtT > 0) { this.hurtT -= dt; this.el.hurt.style.opacity = Math.max(0, this.hurtT * 2); }
   }

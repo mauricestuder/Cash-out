@@ -354,6 +354,26 @@ export class Enemies {
     e.group.rotation.y = lerpAngle(e.group.rotation.y, Math.atan2(p.x - e.pos.x, p.z - e.pos.z), Math.min(1, dt * 8));
   }
 
+  // Closest enemy to the crosshair within `cone` radians that you can actually see, for touch aim assist.
+  assistTarget(o, fwd, cone, maxDist) {
+    let best = null, bestAng = cone;
+    const v = new THREE.Vector3();
+    for (const e of this.list) {
+      if (e.state === 'dying' || e.pos.y < -0.5) continue;
+      const s = e.def.scale;
+      v.set(e.pos.x, e.pos.y + 1.35 * s, e.pos.z).sub(o);
+      const dist = v.length();
+      if (dist > maxDist || dist < 0.5) continue;
+      const ang = v.angleTo(fwd);
+      if (ang >= bestAng) continue;
+      v.divideScalar(dist);
+      if (this.game.world.raycast(o, v, dist) < dist - 0.3) continue;
+      best = { dir: v.clone(), ang };
+      bestAng = ang;
+    }
+    return best;
+  }
+
   // ---------- damage ----------
   raycast(o, d, maxDist) {
     const hits = [];
@@ -370,26 +390,26 @@ export class Enemies {
     return hits.sort((a, b) => a.dist - b.dist);
   }
 
-  damage(e, amount, head, point, explosive = false) {
+  damage(e, amount, head, point, explosive = false, headMul = 2) {
     if (e.state === 'dying') return;
     const game = this.game;
     if (game.state.instaT > 0) amount = e.hp + 1;
-    e.hp -= amount * (head ? 2 : 1);
+    e.hp -= amount * (head ? headMul : 1);
     e.flashT = 0.08;
     game.addCash(10, null, true);
     if (!explosive) { game.hud.hitmarker(head); head ? sfx.headshot() : sfx.hit(); }
     if (point) game.items.burst(point, head ? 6 : 3, 'spark');
-    if (e.hp <= 0) this.kill(e, head, explosive);
+    if (e.hp <= 0) this.kill(e, head, explosive, true, headMul);
   }
 
   // `combo` is false for mass kills (Market Crash, the shredder) so they don't pay combo bonuses.
-  kill(e, head, silent = false, combo = true) {
+  kill(e, head, silent = false, combo = true, headMul = 2) {
     const game = this.game;
     e.state = 'dying';
     e.t = 0;
     game.state.kills++;
     if (head) game.state.headshots++;
-    const reward = e.def.reward + (head ? 40 : 0);
+    const reward = e.def.reward + (head ? Math.round(20 * headMul) : 0);
     game.addCash(reward, e.pos.clone().setY(1.6));
     if (!silent) sfx.kaching(0.06);
     if (!combo) return this.drop(e);

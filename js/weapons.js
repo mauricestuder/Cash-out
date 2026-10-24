@@ -99,6 +99,7 @@ export class Arsenal {
     this.reloadT = 0;
     this.switchT = 0;
     this.kick = 0;
+    this.headStreak = 0; // headshots in a row raise the headshot multiplier
     this.flashT = 0;
     this.triggerHeld = false;
     this.firedThisPress = false;
@@ -256,6 +257,9 @@ export class Arsenal {
       return;
     }
 
+    // Headshots do 2x, +0.5x for every headshot in a row, up to 4x. A body shot or a miss resets it.
+    const headMul = Math.min(4, 2 + 0.5 * this.headStreak);
+    let headHit = false;
     const spreadMul = game.aiming ? 0.35 : game.player.moving ? 1.4 : 1;
     const pellets = d.pellets || 1;
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(cam.quaternion);
@@ -273,12 +277,14 @@ export class Arsenal {
       let endDist = wallDist;
       const pierce = d.pierce || 1;
       for (let i = 0; i < Math.min(pierce, hits.length); i++) {
-        game.enemies.damage(hits[i].enemy, s.dmg, hits[i].head, hits[i].point);
+        game.enemies.damage(hits[i].enemy, s.dmg, hits[i].head, hits[i].point, false, headMul);
+        if (hits[i].head) headHit = true;
         if (i === Math.min(pierce, hits.length) - 1 && pierce === 1) endDist = hits[i].dist;
       }
       const end = origin.clone().addScaledVector(dir, endDist);
       this.spawnTracer(d.proj, muzzle, end, w.gold, endDist === wallDist && endDist < 120);
     }
+    if (headHit) { game.hud.headshot(headMul); this.headStreak++; } else this.headStreak = 0;
     if (w.mag === 0) this.startReload();
   }
 

@@ -7,10 +7,11 @@ export const OPTIONS = {
   effects: { label: 'Retro effects', values: [true, false], names: ['On', 'Off'] },
   fov:     { label: 'Field of view', values: [65, 70, 75, 80, 85, 90, 95] },
   look:    { label: 'Sensitivity', min: 1, max: 100, names: v => v + '%' },
+  assist:  { label: 'Touch aim assist', values: [true, false], names: ['On', 'Off'] },
   volume:  { label: 'Volume', values: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], names: v => Math.round(v * 100) + '%' },
 };
 
-const DEFAULTS = { quality: 360, effects: true, fov: 75, look: 50, volume: 0.5 };
+const DEFAULTS = { quality: 360, effects: true, fov: 75, look: 50, assist: true, volume: 0.5 };
 
 export const settings = { ...DEFAULTS };
 try {

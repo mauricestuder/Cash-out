@@ -26,7 +26,7 @@ export class Player {
   }
 
   look(dx, dy) {
-    const sens = (this.game.aiming ? 0.0013 : 0.0022) * lookSpeed();
+    const sens = (this.game.aiming ? 0.0013 : 0.0022) * lookSpeed() * this.game.assistSlow;
     this.yaw -= dx * sens;
     this.pitch = Math.max(-1.5, Math.min(1.5, this.pitch - dy * sens));
   }

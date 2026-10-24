@@ -34,6 +34,7 @@ vmScene.add(vmSun);
 const game = {
   scene, camera, vmScene, vmCamera, renderer, settings,
   aiming: false,
+  assistSlow: 1, // touch aim assist slows looking while the crosshair is on an enemy
   state: {
     mode: 'menu', cash: 500, round: 0, kills: 0, headshots: 0, earned: 0,
     grenades: 2, doubleT: 0, instaT: 0, saleT: 0, perks: new Set(), bestCombo: 0,
@@ -256,12 +257,36 @@ function frame(now) {
   ps1.render(scene, camera, vmScene, vmCamera);
 }
 
+// Touch screens only, and gentle: aiming slows down over an enemy, and while shooting or aiming
+// the view drifts toward one that is already close to the crosshair. It never snaps or turns for you.
+const assistFwd = new THREE.Vector3(), assistPos = new THREE.Vector3();
+function aimAssist(dt) {
+  game.assistSlow = 1;
+  if (!isTouch || !settings.assist) return;
+  camera.getWorldPosition(assistPos);
+  assistFwd.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  const target = game.enemies.assistTarget(assistPos, assistFwd, 0.16, 26);
+  if (!target) return;
+  if (target.ang < 0.09) game.assistSlow = 0.55;
+  if (!game.aiming && !game.arsenal.triggerHeld) return;
+  const p = game.player, d = target.dir;
+  const wantYaw = Math.atan2(-d.x, -d.z), wantPitch = Math.asin(Math.max(-1, Math.min(1, d.y)));
+  let dy = wantYaw - p.yaw;
+  dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+  const dp = wantPitch - p.pitch;
+  // Close a share of the gap each second, capped so it stays subtle.
+  const k = Math.min(1, dt * (game.aiming ? 3 : 2)), cap = 0.5 * dt;
+  p.yaw += Math.max(-cap, Math.min(cap, dy * k));
+  p.pitch += Math.max(-cap, Math.min(cap, dp * k));
+}
+
 function step(dt) {
   const { state, hud, arsenal, player } = game;
   game.world.update(dt);
   if (state.mode !== 'playing') return;
 
   player.update(dt, keys);
+  aimAssist(dt);
   arsenal.update(dt);
   game.enemies.update(dt);
   game.enemies.updateRounds(dt);
