@@ -1,6 +1,7 @@
 // Money guns: definitions, firing, reloading, the viewmodel and gold-plating.
 import * as THREE from '../vendor/three.module.min.js';
 import { sfx } from './audio.js';
+import { isTouch } from './touch.js';
 import * as T from './textures.js';
 
 export const WEAPONS = {
@@ -240,7 +241,8 @@ export class Arsenal {
     this.flashT = 0.045;
     this.flash.rotation.z = Math.random() * Math.PI;
     sfx.shoot(d.kind, w.gold);
-    game.player.pitch = Math.min(1.5, game.player.pitch + (d.kind === 'shotgun' ? 0.03 : d.kind === 'rifle' ? 0.04 : 0.006));
+    // Aim climbs with each shot, except on touch screens where it's hard to pull back down.
+    if (!isTouch) game.player.pitch = Math.min(1.5, game.player.pitch + (d.kind === 'shotgun' ? 0.03 : d.kind === 'rifle' ? 0.04 : 0.006));
 
     const cam = game.camera;
     const origin = cam.getWorldPosition(new THREE.Vector3());

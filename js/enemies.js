@@ -124,7 +124,7 @@ export class Enemies {
     const c = on ? 0x1a0303 : 0x020203;
     scene.fog.color.setHex(c);
     scene.background.setHex(c);
-    scene.fog.far = on ? 15 : 20;
+    scene.fog.far = on ? 20 : 28;
   }
 
   // ---------- spawning ----------
