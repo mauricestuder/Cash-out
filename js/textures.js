@@ -337,3 +337,96 @@ export function npcSuit(kind) {
     g.fillRect(20, 92, 14, 10); g.fillRect(30, 100, 6, 16); g.fillRect(96, 60, 8, 8);
   });
 }
+
+// ---------- extra rooms ----------
+
+// Stained garage concrete with expansion joints.
+export function concreteFloor() {
+  return tex(256, 256, (g, w, h) => {
+    const r = rng(41);
+    g.fillStyle = '#56544f'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 900; i++) { const v = 70 + r() * 40 | 0; g.fillStyle = `rgb(${v},${v - 2},${v - 6})`; g.fillRect(r() * w, r() * h, 3, 3); }
+    g.fillStyle = 'rgba(20,18,14,.35)';
+    for (let i = 0; i < 5; i++) { g.beginPath(); g.ellipse(r() * w, r() * h, 10 + r() * 30, 6 + r() * 20, r() * 3, 0, Math.PI * 2); g.fill(); }
+    g.strokeStyle = '#3a3935'; g.lineWidth = 3; g.strokeRect(0, 0, w, h);
+  });
+}
+
+// Front of a server rack: dark panels with vents and little status lights.
+export function serverRack() {
+  return tex(128, 256, (g, w, h) => {
+    const r = rng(7);
+    g.fillStyle = '#121418'; g.fillRect(0, 0, w, h);
+    for (let y = 8; y < h - 8; y += 20) {
+      g.fillStyle = '#23272e'; g.fillRect(8, y, w - 16, 16);
+      g.fillStyle = '#0a0b0d'; for (let x = 14; x < 70; x += 6) g.fillRect(x, y + 4, 3, 8);
+      for (let k = 0; k < 3; k++) { g.fillStyle = r() > 0.25 ? '#33ff88' : r() > 0.5 ? '#ff4040' : '#3aa0ff'; g.fillRect(86 + k * 10, y + 6, 5, 4); }
+    }
+  });
+}
+
+// Shelf full of record boxes and binders.
+export function fileShelf() {
+  return tex(256, 256, (g, w, h) => {
+    const r = rng(19);
+    g.fillStyle = '#2b1d10'; g.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 64) {
+      g.fillStyle = '#4a321b'; g.fillRect(0, y + 58, w, 6);
+      let x = 4;
+      while (x < w - 10) {
+        const bw = 18 + r() * 26 | 0;
+        const c = ['#b89d6a', '#a88c5b', '#c7b48a', '#6d4b8a', '#2f5d8a', '#8a2f2f'][r() * 6 | 0];
+        g.fillStyle = c; g.fillRect(x, y + 10 + r() * 8, bw - 3, 48);
+        g.fillStyle = 'rgba(255,255,255,.55)'; g.fillRect(x + 4, y + 24, bw - 11, 8);
+        x += bw;
+      }
+    }
+  });
+}
+
+// Roll-up garage shutter.
+export function shutterTex() {
+  return tex(256, 256, (g, w, h) => {
+    g.fillStyle = '#6c6f73'; g.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 16) { g.fillStyle = '#55585c'; g.fillRect(0, y + 12, w, 4); }
+    g.fillStyle = '#e0b020'; g.fillRect(0, h - 20, w, 20);
+    g.fillStyle = '#111'; for (let x = -20; x < w; x += 40) { g.beginPath(); g.moveTo(x, h); g.lineTo(x + 20, h - 20); g.lineTo(x + 40, h - 20); g.lineTo(x + 20, h); g.fill(); }
+  });
+}
+
+// Grainy black-and-white security camera feed.
+export function cctvTex(seed) {
+  return tex(128, 96, (g, w, h) => {
+    const r = rng(seed);
+    g.fillStyle = '#1c1f1c'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#4a514a'; g.fillRect(0, h * 0.62, w, h);
+    g.fillStyle = '#5f675f'; for (let i = 0; i < 3; i++) g.fillRect(10 + r() * 90, 20 + r() * 20, 10, 50);
+    g.fillStyle = '#9aa59a';
+    const fx = 30 + r() * 60; g.fillRect(fx, 38, 10, 26); g.fillRect(fx + 1, 30, 8, 8); // a lurking figure
+    for (let i = 0; i < 500; i++) { g.fillStyle = `rgba(255,255,255,${r() * 0.12})`; g.fillRect(r() * w, r() * h, 2, 1); }
+    g.fillStyle = '#e8e8e8'; g.font = 'bold 11px monospace'; g.fillText('CAM ' + (seed % 9 + 1), 5, 12);
+    g.fillStyle = '#ff3030'; g.beginPath(); g.arc(w - 10, 9, 4, 0, Math.PI * 2); g.fill();
+  });
+}
+
+// Side of a banded brick of $100 bills.
+export function cashBrick() {
+  return tex(64, 32, (g, w, h) => {
+    g.fillStyle = '#7fae7a'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#5d8a58'; for (let y = 2; y < h; y += 4) g.fillRect(0, y, w, 1);
+    g.fillStyle = '#f2ead2'; g.fillRect(w / 2 - 8, 0, 16, h);
+    g.fillStyle = '#8a6d2f'; g.font = 'bold 10px sans-serif'; g.textAlign = 'center'; g.fillText('$10K', w / 2, h / 2 + 4);
+  });
+}
+
+// Grey steel door with a coloured plate, e.g. STAFF ONLY.
+export function staffDoor(text, plate = '#b8902f') {
+  return tex(256, 256, (g, w, h) => {
+    g.fillStyle = '#4b4f55'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#33363b'; g.lineWidth = 6; g.strokeRect(14, 10, w / 2 - 20, h - 20); g.strokeRect(w / 2 + 6, 10, w / 2 - 20, h - 20);
+    g.fillStyle = '#9a9a9a'; g.fillRect(w / 2 - 16, h / 2, 8, 24); g.fillRect(w / 2 + 8, h / 2, 8, 24);
+    g.fillStyle = plate; g.fillRect(w / 2 - 80, 40, 160, 40);
+    g.fillStyle = '#111'; g.font = 'bold 26px Impact, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(text, w / 2, 61);
+  });
+}

@@ -193,6 +193,7 @@ addEventListener('keydown', (e) => {
   if (e.code === 'Digit1') game.arsenal.switchTo(0);
   if (e.code === 'Digit2') game.arsenal.switchTo(1);
   if (e.code === 'Digit3') game.arsenal.switchTo(2);
+  if (e.code === 'Digit4') game.arsenal.switchTo(3);
   if (e.code === 'KeyQ') game.arsenal.cycle();
   if (e.code === 'KeyG') game.items.throwGrenade();
   if (e.code === 'KeyE' || e.code === 'KeyF') { const n = game.items.nearest(); if (n) n.it.use(); }
@@ -249,6 +250,7 @@ resize();
 
 let last = performance.now();
 let monitorT = 0;
+let dividendT = 5;
 function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min(0.05, (now - last) / 1000);
@@ -297,6 +299,12 @@ function step(dt) {
   if (Math.abs(camera.fov - targetFov) > 0.1) {
     camera.fov += (targetFov - camera.fov) * Math.min(1, dt * 12);
     camera.updateProjectionMatrix();
+  }
+
+  // Dividends perk pays out every 5 seconds.
+  if (state.perks.has('dividends')) {
+    dividendT -= dt;
+    if (dividendT <= 0) { dividendT = 5; game.addCash(25); }
   }
 
   // Flicker a random trading monitor now and then.

@@ -137,7 +137,7 @@ export class Arsenal {
   def(w = this.weapon) { return WEAPONS[w.id]; }
   has(id) { return this.slots.find(w => w.id === id); }
   moveMul() { return this.weapon ? (this.def().moveMul || 1) : 1; }
-  maxSlots() { return this.game.state.perks.has('portfolio') ? 3 : 2; }
+  maxSlots() { return this.game.state.perks.has('portfolio') ? 4 : 3; }
 
   stats(w) {
     const d = WEAPONS[w.id];

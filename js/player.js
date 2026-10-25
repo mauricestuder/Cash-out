@@ -55,6 +55,7 @@ export class Player {
       fx /= len; fz /= len;
       let speed = (this.sprinting ? 7.6 : 5) * push;
       if (this.game.aiming) speed *= 0.6;
+      if (this.game.state.perks.has('liquid')) speed *= 1.2;
       speed *= this.game.arsenal.moveMul();
       const s = Math.sin(this.yaw), c = Math.cos(this.yaw);
       const dx = (fx * c + fz * s) * speed * dt;

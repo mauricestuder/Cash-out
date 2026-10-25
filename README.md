@@ -14,12 +14,16 @@ tablets (play in landscape).
 - Guns shoot money: Penny Pistol (coins), Bill Blaster (banknotes), Gold Bar
   Shotgun, Market Maker AR, plus the Coin Minigun, Diamond Rifle and Piggy
   Launcher from the **Slot Machine** ($950).
-- Spend cash on gun vending machines, the doors to the Trading Floor, Vault
-  and Boardroom, perk machines, the **Paper Shredder** trap in the Trading Floor
+- The bank has 10 rooms to open up: Lobby, Trading Floor, Vault, Boardroom,
+  Loan Office, Records Archive, Server Room, Counting Room, Armored Car Garage
+  and Security Office.
+- Spend cash on gun vending machines, the doors between rooms, perk machines, the **Paper Shredder** trap in the Trading Floor
   doorway and the **Gold Plater** in the Vault, which upgrades a gun to 24K.
 - Perks: Health Insurance (more health), Fast Cash (faster reload), Compound
   Interest (+50% cash), Day Trader (faster fire rate), Diversified Portfolio
-  (carry a third gun) and Golden Parachute (get back up once).
+  (carry a fourth gun), Golden Parachute (get back up once), Liquid Assets
+  (move faster) and Dividends (+$25 every 5 seconds).
+- You carry three guns from the start.
 - Throw Money Bag grenades. Killed enemies sometimes drop Max Ammo, Double
   Cash, Insta-Kill, Market Crash, Bailout (+$1000) or Fire Sale ($10 Slot
   Machine spins).
