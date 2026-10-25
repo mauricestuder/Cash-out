@@ -119,14 +119,19 @@ for (const btn of document.querySelectorAll('.openSettings')) {
 }
 document.getElementById('setBack').addEventListener('click', () => show(settingsFrom));
 
+// Fullscreen on PC, Android and iPad. iPhone Safari ignores it; there the game runs
+// fullscreen when it's added to the home screen (see manifest.webmanifest).
+function goFullscreen() {
+  if (document.fullscreenElement || document.webkitFullscreenElement) return;
+  const el = document.documentElement, fs = el.requestFullscreen || el.webkitRequestFullscreen;
+  try { fs?.call(el, { navigationUI: 'hide' })?.catch?.(() => {}); } catch { /* not allowed here, e.g. in a frame */ }
+}
+
 function start() {
   initAudio();
   document.activeElement?.blur?.();
-  if (isTouch) {
-    // Fullscreen works on Android and iPad; iPhone just ignores it.
-    const el = document.documentElement, fs = el.requestFullscreen || el.webkitRequestFullscreen;
-    try { fs?.call(el)?.catch?.(() => {}); } catch { /* not allowed here */ }
-  } else lock();
+  goFullscreen();
+  if (!isTouch) lock();
   if (game.state.mode === 'menu') {
     game.state.mode = 'playing';
     game.enemies.startRound(1);
@@ -326,6 +331,13 @@ function step(dt) {
   hud.prompt(near ? (isTouch ? near.text.replace('Press E', 'Tap USE') : near.text) : '');
   hud.update(dt);
 }
+
+// iPhone and iPad only go fullscreen as a home screen app, so tell Safari players how.
+const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const standalone = navigator.standalone || matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
+let framed = true;
+try { framed = window.top !== window.self; } catch { /* cross-origin frame */ }
+document.getElementById('homeTip').hidden = !(iOS && !standalone && !framed);
 
 show('menu');
 requestAnimationFrame(frame);

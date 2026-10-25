@@ -5,6 +5,12 @@ PS1 horror look. It runs in the browser and needs no install or build step.
 It works with keyboard and mouse, or with touch controls on phones and
 tablets (play in landscape).
 
+**Play it online:** https://mauricestuder.github.io/Cash-out/
+
+On PC the game goes fullscreen when you press Play. On iPhone and iPad, open
+the link in Safari, tap **Share → Add to Home Screen**, and start Cash Out from
+the home screen: it then runs fullscreen like an app.
+
 - Fight off rounds of the bank's undead staff: **Salesmen**, **Tax Auditors**
   (fast, from round 4), **Debt Collectors** (throw invoices from range, from
   round 6) and the **Bank President** (tanky boss, every 5th round). Every

@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cash Out">
   <meta name="theme-color" content="#050505">
+  <meta name="description" content="Cash Out: a money-themed zombie survival shooter with a PS1 horror look. Plays in the browser on PC, iPad and iPhone.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <title>Cash Out</title>
   <style>
     @font-face { font-family: 'Term'; src: url('vendor/fonts/vt323.woff2') format('woff2'); font-display: block; }
@@ -77,6 +83,8 @@
     button:hover { background: #5a0a0a; color: #fff; }
     button:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 #000; }
     .note { font-size: 20px; color: #7d766a; margin-top: 18px; }
+    #homeTip:not([hidden]) { display: block !important; color: var(--gold); margin-top: 10px; }
+    #homeTip b { color: var(--cream); font-weight: normal; }
     button.alt { font-size: 26px; padding: 6px 22px 8px; margin-left: 14px; background: #120c0c; border-color: var(--line); vertical-align: bottom; }
     h1.mid { font-size: clamp(56px, 11vw, 110px); }
     #setList { display: grid; grid-template-columns: 1fr auto 9ch auto; gap: 8px 10px; align-items: center; font-size: 26px; text-align: left;
@@ -207,6 +215,7 @@
     <div class="panel">
       <h1>CASH OUT</h1>
       <p class="tag">The bank is closed. The staff never left. Survive as many rounds as you can.</p>
+      <p id="homeTip" class="note" hidden>For fullscreen: tap <b>Share</b>, then <b>Add to Home Screen</b>, and start Cash Out from there.</p>
       <p id="best" hidden></p>
       <div class="controls tc">
         <b>Left side</b><span>Drag to move · push all the way up to sprint</span>
@@ -231,7 +240,7 @@
       </div>
       <button id="play">START</button>
       <button class="openSettings alt">SETTINGS</button>
-      <p class="note">Earn cash by hitting the undead salesmen, tax auditors and the Bank President. Unlock the Trading Floor, the Vault and the Boardroom. Find the Gold Plater.<span class="kb"> Play with keyboard and mouse, or keyboard only.</span></p>
+      <p class="note">Earn cash by hitting the undead salesmen, tax auditors and the Bank President. Open up all 10 rooms of the bank. Find the Gold Plater.<span class="kb"> Play with keyboard and mouse, or keyboard only.</span></p>
     </div>
   </div>
 
