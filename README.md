@@ -23,6 +23,9 @@ the home screen: it then runs fullscreen like an app.
 - The bank has 10 rooms to open up: Lobby, Trading Floor, Vault, Boardroom,
   Loan Office, Records Archive, Server Room, Counting Room, Armored Car Garage
   and Security Office.
+- **Ending:** once all 10 rooms are open, pay $10,000 at the armored truck in
+  the garage. Hold out for 60 seconds while the loading dock opens, then drive
+  off to win. Your fastest escape is saved as your best run.
 - Spend cash on gun vending machines, the doors between rooms, perk machines, the **Paper Shredder** trap in the Trading Floor
   doorway and the **Gold Plater** in the Vault, which upgrades a gun to 24K.
 - Perks: Health Insurance (more health), Fast Cash (faster reload), Compound
